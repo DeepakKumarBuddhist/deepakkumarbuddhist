@@ -1,0 +1,331 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const DeepakBuddhaApp());
+}
+
+class DeepakBuddhaApp extends StatelessWidget {
+  const DeepakBuddhaApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Deepak & Buddha',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.indigo,
+        brightness: Brightness.light,
+        fontFamily: 'Roboto',
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const _Root(),
+    );
+  }
+}
+
+class _Root extends StatefulWidget {
+  const _Root({super.key});
+
+  @override
+  State<_Root> createState() => _RootState();
+}
+
+class _RootState extends State<_Root> {
+  int _index = 0;
+  final _pages = const [
+    HomeScreen(),
+    TeachingsScreen(),
+    DailyQuoteScreen(),
+    AboutDeepakScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_index],
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'होम'),
+          NavigationDestination(icon: Icon(Icons.menu_book_outlined), selectedIcon: Icon(Icons.menu_book), label: 'उपदेश'),
+          NavigationDestination(icon: Icon(Icons.format_quote_outlined), selectedIcon: Icon(Icons.format_quote), label: 'दैनिक'),
+          NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'मेरे बारे में'),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            title: const Text('Deepak & Buddha'),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Image.asset(
+                        'assets/buddha_placeholder.png',
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'स्वागत है',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'यह ऐप Deepak ji और बुद्ध के उपदेशों के लिए बनाया गया है। '
+                    'आप यहाँ रोज़ के उद्धरण, मूल सिद्धांत, और अपनी जानकारी देख व दिखा सकते हैं।',
+                    style: TextStyle(fontSize: 16, height: 1.5),
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: const [
+                      _ChipLink(icon: Icons.menu_book, label: 'Four Noble Truths'),
+                      _ChipLink(icon: Icons.route, label: 'Noble Eightfold Path'),
+                      _ChipLink(icon: Icons.self_improvement, label: 'माइंडफुलनेस'),
+                      _ChipLink(icon: Icons.favorite_border, label: 'मेत्ता (करुणा)'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChipLink extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _ChipLink({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18),
+      label: Text(label),
+      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$label - विस्तार के लिए उपदेश टैब खोलें।')),
+      ),
+    );
+  }
+}
+
+class TeachingsScreen extends StatelessWidget {
+  const TeachingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sections = <_SectionData>[
+      _SectionData(
+        title: 'Four Noble Truths (चार आर्य सत्य)',
+        points: const [
+          'दुःख है (Dukkha)',
+          'दुःख का कारण तृष्णा है (Samudaya)',
+          'दुःख का निरोध संभव है (Nirodha)',
+          'निरोध का मार्ग अष्टांगिक मार्ग है (Magga)',
+        ],
+        detail:
+            'जीवन में असंतोष को पहचानना, उसके कारणों को देखना और सम्यक मार्ग से उससे पार होना।',
+      ),
+      _SectionData(
+        title: 'Noble Eightfold Path (आर्य अष्टांगिक मार्ग)',
+        points: const [
+          'सम्यक दृष्टि',
+          'सम्यक संकल्प',
+          'सम्यक वचन',
+          'सम्यक कर्म',
+          'सम्यक आजीविका',
+          'सम्यक प्रयास',
+          'सम्यक स्मृति',
+          'सम्यक समाधि',
+        ],
+        detail: 'आचरण, ध्यान और प्रज्ञा — तीनों का संतुलन।',
+      ),
+      _SectionData(
+        title: 'मेत्ता (करुणामय मैत्री)',
+        points: const [
+          'अपने लिए मंगलकामना',
+          'सब प्राणियों के लिए मंगलकामना',
+          'द्वेष-रहित दृष्टि',
+        ],
+        detail: 'हृदय का विस्तार करके सबके लिए शुभ चाहना।',
+      ),
+      _SectionData(
+        title: 'माइंडफुलनेस / विपश्यना',
+        points: const [
+          'शरीर, वेदना, चित्त, धम्म की स्मृति',
+          'श्वास पर ध्यान (आनापान)',
+          'वर्तमान क्षण में टिकना',
+        ],
+        detail: 'जो है, उसे वैसा ही देखकर ज्ञान उपजता है।',
+      ),
+    ];
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('बुद्ध के उपदेश')),
+        body: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: sections.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, i) {
+            final s = sections[i];
+            return Card(
+              elevation: 0,
+              color: Theme.of(context).colorScheme.surface,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(s.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    ...s.points.map((p) => Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('• '),
+                        Expanded(child: Text(p)),
+                      ],
+                    )),
+                    const SizedBox(height: 8),
+                    Text(s.detail, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionData {
+  final String title;
+  final List<String> points;
+  final String detail;
+  const _SectionData({required this.title, required this.points, required this.detail});
+}
+
+class DailyQuoteScreen extends StatelessWidget {
+  const DailyQuoteScreen({super.key});
+
+  static final _quotes = <String>[
+    'मन सब कुछ है। आप जो सोचते हैं, वही बनते हैं।',
+    'द्वेष कभी द्वेष से शांत नहीं होता; केवल प्रेम से होता है।',
+    'तीन चीज़ें अधिक देर तक छिप नहीं सकतीं: सूरज, चाँद और सत्य।',
+    'अपने उद्धार के लिए स्वयं प्रयत्न करें।',
+    'हर सुबह हम फिर से जन्म लेते हैं। आज हम जो करते हैं, वही सबसे मायने रखता है।',
+    'मार्ग आकाश में नहीं, मन के भीतर है।',
+  ];
+
+  String _quoteForToday() {
+    final now = DateTime.now();
+    final dayOfYear = int.parse(DateTime(now.year, now.month, now.day).difference(DateTime(now.year, 1, 1)).inDays.toString());
+    final idx = dayOfYear % _quotes.length;
+    return _quotes[idx];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final q = _quoteForToday();
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('दैनिक उद्धरण')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.format_quote, size: 64),
+                const SizedBox(height: 16),
+                Text(
+                  q,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 22, height: 1.5, fontStyle: FontStyle.italic),
+                ),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('कल नया उद्धरण अपने आप दिखाई देगा।')),
+                  ),
+                  icon: const Icon(Icons.cycle),
+                  label: const Text('ताज़ा करें'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AboutDeepakScreen extends StatelessWidget {
+  const AboutDeepakScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('मेरे बारे में')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: const [
+            _InfoTile(title: 'नाम', value: 'Deepak Kumar'),
+            _InfoTile(title: 'जन्म तिथि', value: '12/05/1993'),
+            _InfoTile(title: 'पता', value: 'Bargahpur, Ramphaljot, Brijmanganj, Maharajganj, Uttar Pradesh'),
+            _InfoTile(title: 'ईमेल', value: 'deepakkumargautam44@gmail.com'),
+            _InfoTile(title: 'मोबाइल', value: '8115622414'),
+            Divider(),
+            _InfoTile(title: 'रुचि', value: 'समुदाय सेवा, योग, खेल'),
+            _InfoTile(title: 'अनुभव', value: 'Plan India व अन्य संस्थाओं के साथ फील्ड वर्क, समुदाय को योजनाओं से जोड़ना'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoTile extends StatelessWidget {
+  final String title;
+  final String value;
+  const _InfoTile({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.brightness_1, size: 10),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+      subtitle: Text(value),
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+}
